@@ -17,116 +17,121 @@ struct list
 	list* next;
 };
 
-
-
-list* createlist(int n)
+class List
 {
-	list* head = new list;//创建头节点，给头节点分配地址
-	list* end = head;//另尾节点等于头节点
-	list* node;//中间节点
-	for (int i = 0; i < n; i++)
+public:
+	list* createlist(int n)
 	{
-		node = new list;
-		node->val = card[i];
-		end->next = node;
-		end = node;
+		list* head = new list;//创建头节点，给头节点分配地址
+		list* end = head;//另尾节点等于头节点
+		list* node;//中间节点
+		for (int i = 0; i < n; i++)
+		{
+			node = new list;
+			node->val = card[i];
+			end->next = node;
+			end = node;
+		}
+		end->next = NULL;
+		return head;
 	}
-	end->next = NULL;
-	return head;
-}
 
-void printlist(list* head)
-{
-	list* p = head;
-	while (p->next != nullptr)
+	void printlist(list* head)
 	{
-		p = p->next;
-		cout << p->val << " ";
+		list* p = head;
+		while (p->next != nullptr)
+		{
+			p = p->next;
+			cout << p->val << " ";
+		}
+		cout << endl;
 	}
-	cout << endl;
-}
 
-void delete_card(list* head, int num)
-{
-	for (int i = 1; i < num; i++)
+	void delete_card(list* head, int num)
 	{
+		for (int i = 1; i < num; i++)
+		{
 			head = head->next;
+		}
+		if (head->next == NULL)
+			return;
+		list* temp = head->next;
+		head->next = temp->next;
 	}
-	if (head->next == NULL)
-		return;
-	list* temp = head->next;
-	head->next = temp->next;
-}
-void RandomCards(string* arr, int num)
-{
-	int now;
-	srand(time(NULL));
-	for (int i = 0; i < num; i++)
+	void RandomCards(string* arr, int num)
 	{
-		now = rand() % (num - i) + i;//随机生成一个从i到（num - 1）的数
-		if (now != i)
+		int now;
+		srand(time(NULL));
+		for (int i = 0; i < num; i++)
 		{
-			string temp = arr[i];
-			arr[i] = arr[now];
-			arr[now] = temp;
+			now = rand() % (num - i) + i;//随机生成一个从i到（num - 1）的数
+			if (now != i)
+			{
+				string temp = arr[i];
+				arr[i] = arr[now];
+				arr[now] = temp;
+			}
 		}
 	}
-}
 
-void fapai(list* member1, list* member2, list* member3, list* head)
-{
-	for (int i = 0; i < card_num; i++)
+	void fapai(list* member1, list* member2, list* member3, list* head)
 	{
-		head = head->next;
-		if (i % 3 == 0)
+		for (int i = 0; i < card_num; i++)
 		{
-			member1->next = head;
-			member1 = member1->next;
+			head = head->next;
+			if (i % 3 == 0)
+			{
+				member1->next = head;
+				member1 = member1->next;
+			}
+			if (i % 3 == 1)
+			{
+				member2->next = head;
+				member2 = member2->next;
+			}
+			if (i % 3 == 2)
+			{
+				member3->next = head;
+				member3 = member3->next;
+			}
 		}
-		if (i % 3 == 1)
-		{
-			member2->next = head;
-			member2 = member2->next;
-		}
-		if (i % 3 == 2)
-		{
-			member3->next = head;
-			member3 = member3->next;
-		}
+		member1->next = NULL;
+		member2->next = NULL;
+		member3->next = NULL;
 	}
-	member1->next = NULL;
-	member2->next = NULL;
-	member3->next = NULL;
-}
 
-int search_card(string value,list* member)
-{
-	int i = 0;
-	while (member->next != nullptr)
+	int search_card(string value, list* member)
 	{
-		member = member->next;
-		i++;
-		if (member->val == value)
+		int i = 0;
+		while (member->next != nullptr)
 		{
-			return i;
+			member = member->next;
+			i++;
+			if (member->val == value)
+			{
+				return i;
+			}
 		}
+
+		return -1;
 	}
-	
-	return -1;
-}
+};
+
+
 
 int main()
 {
 	int n = 54;
-	RandomCards(card, card_num);
-	list* head = createlist(n);
+	List l;
+	l.RandomCards(card, card_num);
+	list* head = l.createlist(n);
 	string judge = "1";
 	cout << "如果要展示牌堆，请输入数字1，否则随意输入" << endl;
 	cin >> judge;
 	while (judge == "1")
 	{
 		cout << "目前牌堆顺序为:" << endl;
-		printlist(head);
+		l.printlist(head);
 		cout << "请问是否还需要再展示牌堆，如果需要请输入数字1， 否则随意输入" << endl;
 		cin >> judge;
 	}
@@ -136,13 +141,13 @@ int main()
 	list* member3 = new list;
 	list* rest = new list;
 	list* rest_end = rest;
-	fapai(member1, member2, member3, head);
+	l.fapai(member1, member2, member3, head);
 	cout << "---------------发牌成功---------------" << endl << "用户1的牌为：" << endl;
-	printlist(member1);
+	l.printlist(member1);
 	cout << "用户2的牌为：" << endl;
-	printlist(member2);
+	l.printlist(member2);
 	cout << "用户3的牌为：" << endl;
-	printlist(member3);
+	l.printlist(member3);
 	judge = "1";
 	while ((judge == "1") || (judge == "2") || (judge == "3"))
 	{
@@ -160,7 +165,7 @@ int main()
 				cin >> judge_new;
 				if (judge_new == "0")
 					break;
-				if (search_card(judge_new, member1) == -1)
+				if (l.search_card(judge_new, member1) == -1)
 				{
 					flag_judge = 0;
 					cout << "该用户手中没有你要的牌" << endl;
@@ -185,22 +190,22 @@ int main()
 			{
 				for (int i = 0; i < pai_num; i++)
 				{
-					int pai = search_card(card_val[i], member1);
+					int pai = l.search_card(card_val[i], member1);
 					list* node = new list;
 					node->val = card_val[i];
 					rest_end->next = node;
 					rest_end = node;
 					rest_end->next = NULL;
-					delete_card(member1, pai);					
+					l.delete_card(member1, pai);
 				}
 				cout << "此时牌堆中的牌为：" << endl;
-				printlist(rest);
+				l.printlist(rest);
 				cout << "用户1的牌为：" << endl;
-				printlist(member1);
+				l.printlist(member1);
 				cout << "用户2的牌为：" << endl;
-				printlist(member2);
+				l.printlist(member2);
 				cout << "用户3的牌为：" << endl;
-				printlist(member3);
+				l.printlist(member3);
 			}
 			if (flag == 0)
 			{
@@ -221,7 +226,7 @@ int main()
 				cin >> judge_new;
 				if (judge_new == "0")
 					break;
-				if (search_card(judge_new, member2) == -1)
+				if (l.search_card(judge_new, member2) == -1)
 				{
 					flag_judge = 0;
 					cout << "该用户手中没有你要的牌" << endl;
@@ -246,22 +251,22 @@ int main()
 			{
 				for (int i = 0; i < pai_num; i++)
 				{
-					int pai = search_card(card_val[i], member2);
+					int pai = l.search_card(card_val[i], member2);
 					list* node = new list;
 					node->val = card_val[i];
 					rest_end->next = node;
 					rest_end = node;
 					rest_end->next = NULL;
-					delete_card(member2, pai);
+					l.delete_card(member2, pai);
 				}
 				cout << "此时牌堆中的牌为：" << endl;
-				printlist(rest);
+				l.printlist(rest);
 				cout << "用户1的牌为：" << endl;
-				printlist(member1);
+				l.printlist(member1);
 				cout << "用户2的牌为：" << endl;
-				printlist(member2);
+				l.printlist(member2);
 				cout << "用户3的牌为：" << endl;
-				printlist(member3);
+				l.printlist(member3);
 			}
 			if (flag == 0)
 			{
@@ -282,7 +287,7 @@ int main()
 				cin >> judge_new;
 				if (judge_new == "0")
 					break;
-				if (search_card(judge_new, member3) == -1)
+				if (l.search_card(judge_new, member3) == -1)
 				{
 					flag_judge = 0;
 					cout << "该用户手中没有你要的牌" << endl;
@@ -307,22 +312,22 @@ int main()
 			{
 				for (int i = 0; i < pai_num; i++)
 				{
-					int pai = search_card(card_val[i], member3);
+					int pai = l.search_card(card_val[i], member3);
 					list* node = new list;
 					node->val = card_val[i];
 					rest_end->next = node;
 					rest_end = node;
 					rest_end->next = NULL;
-					delete_card(member3, pai);
+					l.delete_card(member3, pai);
 				}
 				cout << "此时牌堆中的牌为：" << endl;
-				printlist(rest);
+				l.printlist(rest);
 				cout << "用户1的牌为：" << endl;
-				printlist(member1);
+				l.printlist(member1);
 				cout << "用户2的牌为：" << endl;
-				printlist(member2);
+				l.printlist(member2);
 				cout << "用户3的牌为：" << endl;
-				printlist(member3);
+				l.printlist(member3);
 			}
 			if (flag == 0)
 			{
